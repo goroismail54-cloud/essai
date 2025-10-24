@@ -1,0 +1,91 @@
+# ==============================
+# Exercice 1 : Analyse statistique simple
+# ==============================
+
+# Liste des âges
+studentsAge = [19,17,21,18,19,19,22,23,20,18,21,24,19,22,20,18,22,21,
+               19,20,19,23,21,18,20,19,20,20,19,20]
+
+# 1️⃣ - Calcul des effectifs pour chaque valeur d'âge
+def effectifs(liste):
+    """
+    Retourne une liste de tuples (xi, ni)
+    où xi est une valeur d'âge et ni son effectif.
+    """
+    valeurs_uniques = sorted(set(liste))       # Tri des valeurs distinctes
+    serie = [(x, liste.count(x)) for x in valeurs_uniques]
+    return serie
+
+S = effectifs(studentsAge)
+print("Série statistique (xi, ni) =", S)
+
+
+# 2️⃣ - Calcul de la moyenne arithmétique
+def moyenne(serie):
+    """
+    Calcule la moyenne arithmétique pondérée :
+    somme(xi * ni) / somme(ni)
+    """
+    num = sum(x * n for x, n in serie)
+    den = sum(n for _, n in serie)
+    return num / den
+
+print("Moyenne =", moyenne(S))
+
+
+# 3️⃣ - Calcul des fréquences
+def frequences(serie):
+    """
+    Calcule la fréquence fi = ni / N
+    """
+    N = sum(n for _, n in serie)
+    return [(x, n/N) for x, n in serie]
+
+F = frequences(S)
+print("Fréquences :", F)
+
+
+# 4️⃣ - Variance et écart-type
+def variance_et_ecartype(serie):
+    """
+    Calcule la variance et l'écart-type :
+    Var = Σ ni*(xi - x̄)² / N
+    """
+    x_barre = moyenne(serie)
+    N = sum(n for _, n in serie)
+    var = sum(n * (x - x_barre)**2 for x, n in serie) / N
+    ecart = var**0.5
+    return var, ecart
+
+var, ecart = variance_et_ecartype(S)
+print("Variance =", var)
+print("Écart-type =", ecart)
+
+
+# 5️⃣ - Calcul de la médiane
+def mediane(liste):
+    """
+    Calcule la médiane d'une série brute (non groupée)
+    """
+    n = len(liste)
+    liste_triee = sorted(liste)
+    milieu = n // 2
+    if n % 2 == 0:
+        # Moyenne des deux valeurs centrales
+        return (liste_triee[milieu - 1] + liste_triee[milieu]) / 2
+    else:
+        return liste_triee[milieu]
+
+print("Médiane =", mediane(studentsAge))
+
+
+# 6️⃣ - Calcul du mode
+def mode(liste):
+    """
+    Retourne la ou les valeurs les plus fréquentes.
+    """
+    effectif_max = max(liste.count(x) for x in liste)
+    modes = sorted(set(x for x in liste if liste.count(x) == effectif_max))
+    return modes
+
+print("Mode(s) =", mode(studentsAge))
